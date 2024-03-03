@@ -114,8 +114,6 @@ class ModelArguments:
 
 DEFAULT_MAX_TEXT_LEN = 512
 DEFAULT_MAX_SUMMARY_LEN = 512 # no need to force it to be smaller, that should be done when pre-processing.
-SAVE_EVERY = 2000
-EVAL_EVERY = SAVE_EVERY
 
 
 @dataclass
@@ -171,12 +169,6 @@ class DataTrainingArguments:
     overwrite_cache: bool = field(
         default=False,
         metadata={"help": "Overwrite the cached training and evaluation sets"},
-    )
-    eval_steps: int = field(
-        default=EVAL_EVERY,
-        metadata={
-            "help": "Number of update steps between two evaluations." # This arg will run evaluations during training.
-        }
     )
     preprocessing_num_workers: Optional[int] = field(
         default=None,
