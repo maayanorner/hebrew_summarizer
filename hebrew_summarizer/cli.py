@@ -172,12 +172,6 @@ class DataTrainingArguments:
         default=False,
         metadata={"help": "Overwrite the cached training and evaluation sets"},
     )
-    save_steps: int = field(
-        default=SAVE_EVERY,
-        metadata={
-            "help": "Number of updates steps before two checkpoint saves." # 500 as a default takes too much disk on longer trains.
-        }
-    )
     eval_steps: int = field(
         default=EVAL_EVERY,
         metadata={
