@@ -112,6 +112,10 @@ class ModelArguments:
     )
 
 
+DEFAULT_MAX_TEXT_LEN = 512
+DEFAULT_MAX_SUMMARY_LEN = 512 # no need to force it to be smaller, that should be done when pre-processing.
+
+
 @dataclass
 class DataTrainingArguments:
     """
@@ -171,7 +175,7 @@ class DataTrainingArguments:
         metadata={"help": "The number of processes to use for the preprocessing."},
     )
     max_source_length: Optional[int] = field(
-        default=1024,
+        default=DEFAULT_MAX_TEXT_LEN,
         metadata={
             "help": (
                 "The maximum total input sequence length after tokenization. Sequences longer "
@@ -180,7 +184,7 @@ class DataTrainingArguments:
         },
     )
     max_target_length: Optional[int] = field(
-        default=128,
+        default=DEFAULT_MAX_SUMMARY_LEN,
         metadata={
             "help": (
                 "The maximum total sequence length for target text after tokenization. Sequences longer "
@@ -318,8 +322,13 @@ class UDPipeTokenizer:
         self.udpipe_model = None
 
     def _model_exists(self, language):
-        return spacy_udpipe.utils.LANGUAGES[language] in os.listdir(
-            spacy_udpipe.utils.MODELS_DIR)
+        # TODO: handle in a better way (something goes wrong with spacy_udpipe.utils.LANGUAGES[language])
+        try:
+            return spacy_udpipe.utils.LANGUAGES[language] in os.listdir(
+                spacy_udpipe.utils.MODELS_DIR)
+        except Exception as e:
+            print(e)
+        return False
 
     def tokenize(self, text):
         doc = self.nlp(text)
