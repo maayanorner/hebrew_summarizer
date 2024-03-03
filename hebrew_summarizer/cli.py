@@ -112,7 +112,7 @@ class ModelArguments:
     )
 
 
-DEFAULT_MAX_TEXT_LEN = 512
+DEFAULT_MAX_TEXT_LEN = 1024
 DEFAULT_MAX_SUMMARY_LEN = 512 # no need to force it to be smaller, that should be done when pre-processing.
 
 
