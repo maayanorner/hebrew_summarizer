@@ -738,7 +738,6 @@ def main():
     optimizer = Adafactor(model.parameters(), lr=lr, eps=(1e-30, 1e-3), clip_threshold=1.0, decay_rate=-0.8,
 						  beta1=None, weight_decay=0.0, scale_parameter=False, relative_step=False,
 						  warmup_init=False)
-    lr_scheduler = AdafactorSchedule(optimizer)
 
     # Initialize our Trainer
     trainer = Seq2SeqTrainer(
@@ -749,7 +748,7 @@ def main():
         tokenizer=tokenizer,
         data_collator=data_collator,
         compute_metrics=compute_metrics if training_args.predict_with_generate else None,
-        optimizers=(optimizer, lr_scheduler)
+        optimizers=(optimizer,)
     )
 
     # Training
