@@ -28,6 +28,7 @@ from transformers import (
     set_seed,
 )
 from transformers.trainer_utils import get_last_checkpoint
+from transformers.optimization import Adafactor, AdafactorSchedule
 from transformers.utils import is_offline_mode
 import spacy_udpipe
 from spacy_udpipe import UDPipeModel
@@ -731,6 +732,13 @@ def main():
         ]
         result["gen_len"] = np.mean(prediction_lens)
         return result
+    
+    # Initialize Adafactor
+    lr = training_args.learning_rate if training_args.learning_rate else 0.001
+    optimizer = Adafactor(model.parameters(), lr=lr, eps=(1e-30, 1e-3), clip_threshold=1.0, decay_rate=-0.8,
+						  beta1=None, weight_decay=0.0, scale_parameter=False, relative_step=False,
+						  warmup_init=False)
+    lr_scheduler = AdafactorSchedule(optimizer)
 
     # Initialize our Trainer
     trainer = Seq2SeqTrainer(
@@ -741,6 +749,7 @@ def main():
         tokenizer=tokenizer,
         data_collator=data_collator,
         compute_metrics=compute_metrics if training_args.predict_with_generate else None,
+        optimizers=(optimizer, lr_scheduler)
     )
 
     # Training
