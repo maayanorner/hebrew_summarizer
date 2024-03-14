@@ -28,7 +28,6 @@ from transformers import (
     set_seed,
 )
 from transformers.trainer_utils import get_last_checkpoint
-from transformers.optimization import Adafactor, AdafactorSchedule
 from transformers.utils import is_offline_mode
 import spacy_udpipe
 from spacy_udpipe import UDPipeModel
