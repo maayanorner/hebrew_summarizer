@@ -741,15 +741,7 @@ def main():
         result["gen_len"] = np.mean(prediction_lens)
         return result
     
-    # Default is (None, None)
-    optimizers=(None, None)
-    if model_args.use_adafactor:
-        # Initialize Adafactor
-        lr = training_args.learning_rate if training_args.learning_rate else 0.001
-        optimizer = Adafactor(model.parameters(), lr=lr, eps=(1e-30, 1e-3), clip_threshold=1.0, decay_rate=-0.8,
-                            beta1=None, weight_decay=0.0, scale_parameter=False, relative_step=False,
-                            warmup_init=False)
-        optimizers=(optimizer, None)
+    # To use adafactor just add --adafactor, it defaults to {"scale_parameter": False, "relative_step": False}
 
     # Initialize our Trainer
     trainer = Seq2SeqTrainer(
@@ -760,7 +752,6 @@ def main():
         tokenizer=tokenizer,
         data_collator=data_collator,
         compute_metrics=compute_metrics if training_args.predict_with_generate else None,
-        optimizers=optimizers
     )
 
     # Training
